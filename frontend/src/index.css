@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-orange-50: #fffaf0;
+  --color-brand-orange-100: #fef0d6;
+  --color-brand-orange-500: #ff7e5f;
+  --color-brand-orange-600: #ea580c;
+  --color-brand-orange-700: #c2410c;
+  
+  --color-brand-green-50: #f0fdf4;
+  --color-brand-green-100: #dcfce7;
+  --color-brand-green-500: #1abc9c;
+  --color-brand-green-600: #0d9488;
+  --color-brand-green-700: #0f766e;
+  
+  --color-brand-accent: #ff2d55;
+  
+  --font-cairo: 'Cairo', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+  
+  --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  --shadow-premium-hover: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+body {
+  font-family: var(--font-cairo);
+}
+
+/* Custom styling for numbers to use Outfit */
+.number-font {
+  font-family: var(--font-outfit);
+}
+
+/* Custom scrollbar for premium touch */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+/* Animation utilities for floating ice and bubbles */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes bubble {
+  0% { transform: translateY(100%) scale(0.8); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-bubble-slow {
+  animation: bubble 8s ease-in infinite;
+}
+
+.animate-bubble-medium {
+  animation: bubble 6s ease-in infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Anti-gravity specific styling and animations */
+@keyframes antigravity-float {
+  0% { transform: translateY(0px) rotate(0deg) scale(1); }
+  33% { transform: translateY(-40px) rotate(15deg) scale(1.05); }
+  66% { transform: translateY(-20px) rotate(-15deg) scale(0.95); }
+  100% { transform: translateY(0px) rotate(0deg) scale(1); }
+}
+
+@keyframes antigravity-bubble {
+  0% { transform: translateY(100px) scale(0.6); opacity: 0; }
+  20% { opacity: 0.9; }
+  80% { opacity: 0.9; }
+  100% { transform: translateY(-700px) scale(1.6); opacity: 0; }
+}
+
+/* When antigravity-mode is active, override standard floating & bubbles */
+.antigravity-mode .animate-float-slow {
+  animation: antigravity-float 8s ease-in-out infinite;
+}
+
+.antigravity-mode .animate-float-medium {
+  animation: antigravity-float 5s ease-in-out infinite;
+}
+
+.antigravity-mode .animate-float-fast {
+  animation: antigravity-float 3.5s ease-in-out infinite;
+}
+
+.antigravity-mode .animate-bubble-slow {
+  animation: antigravity-bubble 12s linear infinite;
+}
+
+.antigravity-mode .animate-bubble-medium {
+  animation: antigravity-bubble 8s linear infinite;
+}
+
+/* Make cards drift and float much higher on hover in Anti-Gravity mode */
+.antigravity-mode .group {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s ease-in-out !important;
+}
+
+.antigravity-mode .group:hover {
+  transform: translateY(-24px) scale(1.03) rotate(1.5deg) !important;
+  box-shadow: 0 35px 70px -15px rgba(255, 126, 95, 0.25) !important;
+}
+
+/* Apply a glowing floating effect to standard icons in Anti-Gravity mode */
+.antigravity-mode .lucide {
+  filter: drop-shadow(0 0 4px rgba(255, 126, 95, 0.4));
+  transition: filter 0.5s ease;
+}
+
