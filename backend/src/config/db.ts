@@ -1,45 +1,107 @@
-import sqlite3 from 'sqlite3';
-import { open, Database } from 'sqlite';
-import path from 'path';
+import { Pool, PoolClient } from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const dbPath = path.resolve(__dirname, '../../database.sqlite');
+const connectionString = process.env.DATABASE_URL;
 
-let dbConnection: Database | null = null;
+let pool: Pool | null = null;
 
-export const getDb = async (): Promise<Database> => {
-  if (dbConnection) return dbConnection;
-  
-  dbConnection = await open({
-    filename: dbPath,
-    driver: sqlite3.Database
+const getPool = (): Pool => {
+  if (pool) return pool;
+  if (!connectionString) {
+    throw new Error('DATABASE_URL environment variable is missing!');
+  }
+  pool = new Pool({
+    connectionString,
+    ssl: connectionString.includes('localhost') || connectionString.includes('127.0.0.1')
+      ? false
+      : { rejectUnauthorized: false } // Required for hosting platforms like Supabase
   });
-
-  // Enable foreign keys, Write-Ahead Logging (WAL) mode, and busy timeout for concurrent writes
-  await dbConnection.run('PRAGMA foreign_keys = ON');
-  await dbConnection.run('PRAGMA journal_mode = WAL');
-  await dbConnection.run('PRAGMA busy_timeout = 5000');
-  
-  return dbConnection;
+  return pool;
 };
 
-export const getFreshDb = async (): Promise<Database> => {
-  const db = await open({
-    filename: dbPath,
-    driver: sqlite3.Database
-  });
-  await db.run('PRAGMA foreign_keys = ON');
-  await db.run('PRAGMA journal_mode = WAL');
-  await db.run('PRAGMA busy_timeout = 5000');
-  return db;
+export interface DatabaseAdapter {
+  get: (sql: string, params?: any[]) => Promise<any>;
+  all: (sql: string, params?: any[]) => Promise<any[]>;
+  run: (sql: string, params?: any[]) => Promise<{ lastID?: any; changes?: number }>;
+  exec: (sql: string) => Promise<void>;
+  close: () => Promise<void>;
+}
+
+/**
+ * Utility to convert SQLite '?' parameters to PostgreSQL '$1', '$2', etc.
+ * Also maps transaction syntax.
+ */
+function convertSql(sql: string): string {
+  // Map SQLite TRANSACTION keywords if explicit
+  if (sql.trim().toUpperCase() === 'BEGIN TRANSACTION') {
+    return 'BEGIN';
+  }
+  
+  let index = 1;
+  return sql.replace(/\?/g, () => `$${index++}`);
+}
+
+const poolDbAdapter: DatabaseAdapter = {
+  get: async (sql: string, params: any[] = []) => {
+    const dbPool = getPool();
+    const res = await dbPool.query(convertSql(sql), params);
+    return res.rows[0];
+  },
+  all: async (sql: string, params: any[] = []) => {
+    const dbPool = getPool();
+    const res = await dbPool.query(convertSql(sql), params);
+    return res.rows;
+  },
+  run: async (sql: string, params: any[] = []) => {
+    const dbPool = getPool();
+    const res = await dbPool.query(convertSql(sql), params);
+    return { changes: res.rowCount || 0 };
+  },
+  exec: async (sql: string) => {
+    const dbPool = getPool();
+    await dbPool.query(convertSql(sql));
+  },
+  close: async () => {
+    // No-op for global pool connection adapter
+  }
+};
+
+export const getDb = async (): Promise<DatabaseAdapter> => {
+  return poolDbAdapter;
+};
+
+export const getFreshDb = async (): Promise<DatabaseAdapter> => {
+  const dbPool = getPool();
+  const client = await dbPool.connect();
+  
+  return {
+    get: async (sql: string, params: any[] = []) => {
+      const res = await client.query(convertSql(sql), params);
+      return res.rows[0];
+    },
+    all: async (sql: string, params: any[] = []) => {
+      const res = await client.query(convertSql(sql), params);
+      return res.rows;
+    },
+    run: async (sql: string, params: any[] = []) => {
+      const res = await client.query(convertSql(sql), params);
+      return { changes: res.rowCount || 0 };
+    },
+    exec: async (sql: string) => {
+      await client.query(convertSql(sql));
+    },
+    close: async () => {
+      client.release();
+    }
+  };
 };
 
 export const initDb = async (): Promise<void> => {
   const db = await getDb();
 
-  // Create Users Table
+  // Create Users Table (mapped DATETIME -> TIMESTAMP)
   await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
@@ -49,14 +111,14 @@ export const initDb = async (): Promise<void> => {
       role TEXT DEFAULT 'customer',
       password TEXT NOT NULL,
       savedAddresses TEXT DEFAULT '[]',
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
   // Explicitly create an index on email for query speed safety
   await db.exec('CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)');
 
-  // Create Products Table
+  // Create Products Table (mapped DATETIME -> TIMESTAMP)
   await db.exec(`
     CREATE TABLE IF NOT EXISTS products (
       id TEXT PRIMARY KEY,
@@ -73,7 +135,7 @@ export const initDb = async (): Promise<void> => {
       availableSugar TEXT DEFAULT '[]',
       availableIce TEXT DEFAULT '[]',
       availableExtras TEXT DEFAULT '[]',
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
@@ -113,5 +175,5 @@ export const initDb = async (): Promise<void> => {
     )
   `);
 
-  console.log('SQLite Database tables checked and initialized.');
+  console.log('PostgreSQL Database tables checked and initialized.');
 };

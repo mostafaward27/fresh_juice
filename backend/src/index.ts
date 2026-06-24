@@ -32,8 +32,12 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" } // Required to allow loading local uploaded images in the browser
 }));
 
+const allowedOrigins = process.env.FRONTEND_URL 
+  ? [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:3000']
+  : '*';
+
 app.use(cors({
-  origin: '*', // Allow all origins for dev/staging simplicity, can configure in production
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
