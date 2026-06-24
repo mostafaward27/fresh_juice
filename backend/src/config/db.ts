@@ -53,6 +53,9 @@ export const initDb = async (): Promise<void> => {
     )
   `);
 
+  // Explicitly create an index on email for query speed safety
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)');
+
   // Create Products Table
   await db.exec(`
     CREATE TABLE IF NOT EXISTS products (

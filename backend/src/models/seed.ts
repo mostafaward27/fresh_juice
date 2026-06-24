@@ -1,5 +1,5 @@
 import { getDb, initDb } from '../config/db';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '../utils/hash';
 
 const DEFAULT_SIZES = [
   { name: 'small', label: 'صغير (300 مل)', priceModifier: -5 },
@@ -230,9 +230,8 @@ const seed = async () => {
     console.log('Database tables cleared.');
 
     // Seed default users
-    const salt = await bcrypt.genSalt(10);
-    const adminPassword = await bcrypt.hash('admin123', salt);
-    const userPassword = await bcrypt.hash('user123', salt);
+    const adminPassword = await hashPassword('admin123');
+    const userPassword = await hashPassword('user123');
 
     await db.run(
       `INSERT INTO users (id, name, email, phone, role, password, savedAddresses) 

@@ -1,3 +1,7 @@
+import os from 'os';
+// Set UV_THREADPOOL_SIZE to maximize concurrency of crypto operations in libuv
+process.env.UV_THREADPOOL_SIZE = process.env.UV_THREADPOOL_SIZE || String(Math.max(16, os.cpus().length * 2));
+
 import express, { Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -41,10 +45,11 @@ app.use(express.urlencoded({ extended: true }));
 // Serve local static uploaded product images
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
-// Rate Limiter to guard endpoints
+// Rate Limiter to guard endpoints (bypassed if DISABLE_RATE_LIMITER=true for load testing)
+const rateLimiterDisabled = process.env.DISABLE_RATE_LIMITER === 'true';
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200, // Limit each IP to 200 requests per window
+  max: rateLimiterDisabled ? 9999999 : 200, // Limit each IP to 200 requests per window
   message: { error: 'طلبات كثيرة جداً، الرجاء المحاولة لاحقاً بعد 15 دقيقة.' }
 });
 app.use('/api', limiter);
