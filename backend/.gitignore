@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Compiled output
+dist/
+*.tsbuildinfo
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+database.sqlite-journal
+database.sqlite-wal
+database.sqlite-shm
+
+# Environments & secrets
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs & temp files
+*.log
+.tmp/
+.temp/
+
+# User uploads fallback
+public/uploads/
