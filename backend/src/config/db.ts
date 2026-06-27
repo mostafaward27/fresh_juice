@@ -1,11 +1,16 @@
 import { Pool, PoolClient } from 'pg';
+import sqlite3 from 'sqlite3';
+import { open, Database } from 'sqlite';
+import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const connectionString = process.env.DATABASE_URL;
+const dbPath = path.resolve(__dirname, process.env.DATABASE_FILE || '../../database.sqlite');
 
 let pool: Pool | null = null;
+let sqliteDb: Database | null = null;
 
 const getPool = (): Pool => {
   if (pool) return pool;
@@ -19,6 +24,18 @@ const getPool = (): Pool => {
       : { rejectUnauthorized: false } // Required for hosting platforms like Supabase
   });
   return pool;
+};
+
+const getSqliteDb = async (): Promise<Database> => {
+  if (sqliteDb) return sqliteDb;
+  sqliteDb = await open({
+    filename: dbPath,
+    driver: sqlite3.Database
+  });
+  await sqliteDb.run('PRAGMA foreign_keys = ON');
+  await sqliteDb.run('PRAGMA journal_mode = WAL');
+  await sqliteDb.run('PRAGMA busy_timeout = 5000');
+  return sqliteDb;
 };
 
 export interface DatabaseAdapter {
@@ -68,34 +85,80 @@ const poolDbAdapter: DatabaseAdapter = {
   }
 };
 
+const sqliteDbAdapter: DatabaseAdapter = {
+  get: async (sql: string, params: any[] = []) => {
+    const db = await getSqliteDb();
+    return db.get(sql, params);
+  },
+  all: async (sql: string, params: any[] = []) => {
+    const db = await getSqliteDb();
+    return db.all(sql, params);
+  },
+  run: async (sql: string, params: any[] = []) => {
+    const db = await getSqliteDb();
+    return db.run(sql, params);
+  },
+  exec: async (sql: string) => {
+    const db = await getSqliteDb();
+    await db.exec(sql);
+  },
+  close: async () => {
+    if (sqliteDb) {
+      await sqliteDb.close();
+      sqliteDb = null;
+    }
+  }
+};
+
 export const getDb = async (): Promise<DatabaseAdapter> => {
-  return poolDbAdapter;
+  if (connectionString) {
+    return poolDbAdapter;
+  } else {
+    return sqliteDbAdapter;
+  }
 };
 
 export const getFreshDb = async (): Promise<DatabaseAdapter> => {
-  const dbPool = getPool();
-  const client = await dbPool.connect();
-  
-  return {
-    get: async (sql: string, params: any[] = []) => {
-      const res = await client.query(convertSql(sql), params);
-      return res.rows[0];
-    },
-    all: async (sql: string, params: any[] = []) => {
-      const res = await client.query(convertSql(sql), params);
-      return res.rows;
-    },
-    run: async (sql: string, params: any[] = []) => {
-      const res = await client.query(convertSql(sql), params);
-      return { changes: res.rowCount || 0 };
-    },
-    exec: async (sql: string) => {
-      await client.query(convertSql(sql));
-    },
-    close: async () => {
-      client.release();
-    }
-  };
+  if (connectionString) {
+    const dbPool = getPool();
+    const client = await dbPool.connect();
+    
+    return {
+      get: async (sql: string, params: any[] = []) => {
+        const res = await client.query(convertSql(sql), params);
+        return res.rows[0];
+      },
+      all: async (sql: string, params: any[] = []) => {
+        const res = await client.query(convertSql(sql), params);
+        return res.rows;
+      },
+      run: async (sql: string, params: any[] = []) => {
+        const res = await client.query(convertSql(sql), params);
+        return { changes: res.rowCount || 0 };
+      },
+      exec: async (sql: string) => {
+        await client.query(convertSql(sql));
+      },
+      close: async () => {
+        client.release();
+      }
+    };
+  } else {
+    const db = await open({
+      filename: dbPath,
+      driver: sqlite3.Database
+    });
+    await db.run('PRAGMA foreign_keys = ON');
+    await db.run('PRAGMA journal_mode = WAL');
+    await db.run('PRAGMA busy_timeout = 5000');
+    return {
+      get: async (sql: string, params: any[] = []) => db.get(sql, params),
+      all: async (sql: string, params: any[] = []) => db.all(sql, params),
+      run: async (sql: string, params: any[] = []) => db.run(sql, params),
+      exec: async (sql: string) => db.exec(sql),
+      close: async () => db.close()
+    };
+  }
 };
 
 export const initDb = async (): Promise<void> => {
@@ -175,5 +238,9 @@ export const initDb = async (): Promise<void> => {
     )
   `);
 
-  console.log('PostgreSQL Database tables checked and initialized.');
+  if (connectionString) {
+    console.log('PostgreSQL Database tables checked and initialized.');
+  } else {
+    console.log('SQLite Database tables checked and initialized.');
+  }
 };

@@ -40,9 +40,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const borderColors = {
-    success: 'border-emerald-500/20 bg-emerald-50/90 text-emerald-950',
-    error: 'border-rose-500/20 bg-rose-50/90 text-rose-950',
-    info: 'border-sky-500/20 bg-sky-50/90 text-sky-950'
+    success: 'border-emerald-500/20 bg-emerald-50/90 text-emerald-950 dark:bg-emerald-950/90 dark:text-emerald-100 dark:border-emerald-800/50',
+    error: 'border-rose-500/20 bg-rose-50/90 text-rose-950 dark:bg-rose-950/90 dark:text-rose-100 dark:border-rose-800/50',
+    info: 'border-sky-500/20 bg-sky-50/90 text-sky-950 dark:bg-sky-950/90 dark:text-sky-100 dark:border-sky-800/50'
   };
 
   return (

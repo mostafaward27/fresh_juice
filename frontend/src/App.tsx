@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './components/ui/Toast';
 import { CartProvider } from './context/CartContext';
 import { FavoriteProvider } from './context/FavoriteContext';
@@ -12,17 +13,19 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <ToastProvider>
-          <CartProvider>
-            <FavoriteProvider>
-              <OrderProvider>
-                <AntiGravityProvider>
-                  <AppRoutes />
-                </AntiGravityProvider>
-              </OrderProvider>
-            </FavoriteProvider>
-          </CartProvider>
-        </ToastProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <CartProvider>
+              <FavoriteProvider>
+                <OrderProvider>
+                  <AntiGravityProvider>
+                    <AppRoutes />
+                  </AntiGravityProvider>
+                </OrderProvider>
+              </FavoriteProvider>
+            </CartProvider>
+          </ToastProvider>
+        </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
   );

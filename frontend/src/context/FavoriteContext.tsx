@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 interface FavoriteContextType {
   favorites: string[];
   toggleFavorite: (productId: string) => void;
   isFavorite: (productId: string) => boolean;
+  showAuthModal: boolean;
+  setShowAuthModal: (show: boolean) => void;
 }
 
 const FavoriteContext = createContext<FavoriteContextType | undefined>(undefined);
@@ -11,7 +14,9 @@ const FavoriteContext = createContext<FavoriteContextType | undefined>(undefined
 const FAVORITES_STORAGE_KEY = 'shabar_favorites';
 
 export const FavoriteProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(FAVORITES_STORAGE_KEY);
@@ -25,6 +30,11 @@ export const FavoriteProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   const toggleFavorite = (productId: string) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+
     let newFavorites = [...favorites];
     const index = favorites.indexOf(productId);
     
@@ -43,7 +53,7 @@ export const FavoriteProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   return (
-    <FavoriteContext.Provider value={{ favorites, toggleFavorite, isFavorite }}>
+    <FavoriteContext.Provider value={{ favorites, toggleFavorite, isFavorite, showAuthModal, setShowAuthModal }}>
       {children}
     </FavoriteContext.Provider>
   );

@@ -60,21 +60,21 @@ export const ProductCustomizer: React.FC<ProductCustomizerProps> = ({
     <div className="flex flex-col gap-6 text-right">
       {/* Size Option */}
       <div>
-        <h4 className="text-sm font-extrabold text-slate-700 mb-3">حجم الكوب</h4>
+        <h4 className="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-3">حجم الكوب</h4>
         <div className="grid grid-cols-3 gap-3">
           {product.availableSizes.map(size => (
             <button
               key={size.name}
               type="button"
               onClick={() => setSelectedSize(size.name)}
-              className={`flex flex-col items-center justify-center p-3.5 border-2 rounded-2xl transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center p-3.5 border-2 rounded-2xl transition-all duration-200 cursor-pointer ${
                 selectedSize === size.name
-                  ? 'border-brand-orange-500 bg-brand-orange-50/40 text-brand-orange-600 font-bold'
-                  : 'border-slate-100 hover:border-slate-200 bg-white text-slate-600'
+                  ? 'border-brand-orange-500 bg-brand-orange-50/40 dark:bg-brand-orange-950/20 text-brand-orange-600 dark:text-brand-orange-400 font-bold'
+                  : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
               }`}
             >
               <span className="text-sm">{size.label}</span>
-              <span className="text-xs mt-1 text-slate-400 number-font">
+              <span className="text-xs mt-1 text-slate-400 dark:text-slate-500 number-font">
                 {size.priceModifier >= 0 ? `+${size.priceModifier}` : size.priceModifier} ج.م
               </span>
             </button>
@@ -84,17 +84,17 @@ export const ProductCustomizer: React.FC<ProductCustomizerProps> = ({
 
       {/* Sugar Level */}
       <div>
-        <h4 className="text-sm font-extrabold text-slate-700 mb-3">نسبة السكر</h4>
+        <h4 className="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-3">نسبة السكر</h4>
         <div className="grid grid-cols-4 gap-2">
           {product.availableSugar.map(sugar => (
             <button
               key={sugar.value}
               type="button"
               onClick={() => setSelectedSugar(sugar.value)}
-              className={`py-3 text-xs border-2 rounded-2xl text-center transition-all duration-200 font-bold ${
+              className={`py-3 text-xs border-2 rounded-2xl text-center transition-all duration-200 font-bold cursor-pointer ${
                 selectedSugar === sugar.value
-                  ? 'border-brand-orange-500 bg-brand-orange-50/40 text-brand-orange-600'
-                  : 'border-slate-100 hover:border-slate-200 bg-white text-slate-600'
+                  ? 'border-brand-orange-500 bg-brand-orange-50/40 dark:bg-brand-orange-950/20 text-brand-orange-600 dark:text-brand-orange-400'
+                  : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
               }`}
             >
               {sugar.label}
@@ -105,17 +105,17 @@ export const ProductCustomizer: React.FC<ProductCustomizerProps> = ({
 
       {/* Ice Level */}
       <div>
-        <h4 className="text-sm font-extrabold text-slate-700 mb-3">كمية الثلج</h4>
+        <h4 className="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-3">كمية الثلج</h4>
         <div className="grid grid-cols-3 gap-3">
           {product.availableIce.map(ice => (
             <button
               key={ice.value}
               type="button"
               onClick={() => setSelectedIce(ice.value)}
-              className={`py-3.5 text-sm border-2 rounded-2xl text-center transition-all duration-200 font-bold ${
+              className={`py-3.5 text-sm border-2 rounded-2xl text-center transition-all duration-200 font-bold cursor-pointer ${
                 selectedIce === ice.value
-                  ? 'border-brand-orange-500 bg-brand-orange-50/40 text-brand-orange-600'
-                  : 'border-slate-100 hover:border-slate-200 bg-white text-slate-600'
+                  ? 'border-brand-orange-500 bg-brand-orange-50/40 dark:bg-brand-orange-950/20 text-brand-orange-600 dark:text-brand-orange-400'
+                  : 'border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
               }`}
             >
               {ice.label}
@@ -127,7 +127,7 @@ export const ProductCustomizer: React.FC<ProductCustomizerProps> = ({
       {/* Extras */}
       {product.availableExtras.length > 0 && (
         <div>
-          <h4 className="text-sm font-extrabold text-slate-700 mb-3">إضافات لذيذة</h4>
+          <h4 className="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-3">إضافات لذيذة</h4>
           <div className="flex flex-col gap-2">
             {product.availableExtras.map(extra => {
               const isChecked = selectedExtras.includes(extra.name);
@@ -136,21 +136,21 @@ export const ProductCustomizer: React.FC<ProductCustomizerProps> = ({
                   key={extra.name}
                   type="button"
                   onClick={() => toggleExtra(extra.name)}
-                  className={`flex items-center justify-between p-3.5 border-2 rounded-2xl transition-all duration-200 ${
+                  className={`flex items-center justify-between p-3.5 border-2 rounded-2xl transition-all duration-200 cursor-pointer ${
                     isChecked
-                      ? 'border-brand-orange-500 bg-brand-orange-50/30'
-                      : 'border-slate-100 bg-white hover:bg-slate-50'
+                      ? 'border-brand-orange-500 bg-brand-orange-50/30 dark:bg-brand-orange-950/10'
+                      : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${
-                      isChecked ? 'border-brand-orange-500 bg-brand-orange-500 text-white' : 'border-slate-300 bg-white'
+                      isChecked ? 'border-brand-orange-500 bg-brand-orange-500 text-white' : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900'
                     }`}>
                       {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                     </div>
-                    <span className="text-sm font-bold text-slate-700">{extra.label}</span>
+                    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{extra.label}</span>
                   </div>
-                  <span className="text-sm font-semibold text-slate-500 number-font">+{extra.price} ج.م</span>
+                  <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 number-font">+{extra.price} ج.م</span>
                 </button>
               );
             })}
@@ -159,38 +159,38 @@ export const ProductCustomizer: React.FC<ProductCustomizerProps> = ({
       )}
 
       {/* Quantity & Actions */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t border-slate-100">
-        <div className="flex items-center gap-4 bg-slate-50 border border-slate-100 p-2.5 rounded-2xl select-none">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 p-2.5 rounded-2xl select-none">
           <button
             type="button"
             onClick={() => setQuantity(q => Math.max(1, q - 1))}
-            className="p-2 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors"
+            className="p-2 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors cursor-pointer"
           >
-            <Minus className="w-4 h-4 text-slate-600" />
+            <Minus className="w-4 h-4 text-slate-600 dark:text-slate-300" />
           </button>
-          <span className="text-lg font-black text-slate-800 w-8 text-center number-font">{quantity}</span>
+          <span className="text-lg font-black text-slate-800 dark:text-slate-100 w-8 text-center number-font">{quantity}</span>
           <button
             type="button"
             onClick={() => setQuantity(q => q + 1)}
-            className="p-2 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors"
+            className="p-2 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors cursor-pointer"
           >
-            <Plus className="w-4 h-4 text-slate-600" />
+            <Plus className="w-4 h-4 text-slate-600 dark:text-slate-300" />
           </button>
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto flex-grow justify-end">
           <div className="text-left">
-            <span className="text-xs font-bold text-slate-400 block">الإجمالي</span>
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 block">الإجمالي</span>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-black text-brand-orange-500 number-font">
                 {currentPrice * quantity}
               </span>
-              <span className="text-xs font-bold text-slate-500">ج.م</span>
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">ج.م</span>
             </div>
           </div>
           <Button
             onClick={handleAdd}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto cursor-pointer"
           >
             {buttonText}
           </Button>

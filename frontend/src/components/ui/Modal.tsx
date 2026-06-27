@@ -55,18 +55,18 @@ export const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', duration: 0.5 }}
-            className={`relative w-full ${sizes[size]} bg-white/90 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col`}
+            className={`relative w-full ${sizes[size]} bg-white/90 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col`}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-              {title ? (
-                <h3 className="text-xl font-bold text-slate-900">{title}</h3>
+            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800">
+               {title ? (
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">{title}</h3>
               ) : (
                 <div />
               )}
               <button
                 onClick={onClose}
-                className="p-2 text-slate-400 hover:text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors duration-200"
+                className="p-2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-full transition-colors duration-200"
               >
                 <X className="w-5 h-5" />
               </button>

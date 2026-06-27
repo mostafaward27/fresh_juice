@@ -31,7 +31,7 @@ const seedProducts = [
     id: '1',
     name: 'عصير مانجو فريش مشبر',
     description: 'عصير مانجو طبيعي 100٪ مثلج ومنعش، مصنوع من ثمار المانجو الفريش المحضرة يومياً لتمنحك طاقة وانتعاشاً لا يُنسى.',
-    image: 'https://images.unsplash.com/photo-1553177595-4de2bb0842b9?auto=format&fit=crop&q=80&w=600',
+    image: 'https://theallnaturalvegan.com/wp-content/uploads/2025/07/mango-pineapple-juice.jpg',
     category: 'juices',
     price: 35,
     rating: 4.9,

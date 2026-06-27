@@ -72,7 +72,7 @@ export const Menu: React.FC = () => {
     : CATEGORIES.find(c => c.slug === selectedCategory)?.description;
 
   return (
-    <div className="py-10 bg-slate-50/50 flex-grow">
+    <div className="py-10 bg-slate-50/50 dark:bg-slate-950 flex-grow transition-colors duration-300">
       <Helmet>
         <title>مشروبات مشبرة | منيو المشروبات</title>
         <meta name="description" content="تصفح قائمة عصائرنا الطبيعية المنعشة والمشروبات الباردة والقهوة المثلجة والمشروبات الخاصة والمبتكرة." />
@@ -83,8 +83,8 @@ export const Menu: React.FC = () => {
         {/* Page Header */}
         <div className="text-center max-w-xl mx-auto mb-10">
           <span className="text-brand-orange-500 font-black text-sm block mb-1">قائمة المشروبات</span>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-800 mb-3">منيو الانتعاش 🍹</h1>
-          <p className="text-slate-500 text-sm leading-relaxed">{activeCategoryDesc}</p>
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-slate-100 mb-3">منيو الانتعاش 🍹</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{activeCategoryDesc}</p>
         </div>
 
         {/* Search & Sorting Controls */}
@@ -96,7 +96,7 @@ export const Menu: React.FC = () => {
               placeholder="ابحث عن عصيرك المفضل..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-12 pl-4 py-3.5 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-orange-500 rounded-2xl text-slate-800 text-sm transition-all text-right shadow-sm"
+              className="w-full pr-12 pl-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-orange-500 rounded-2xl text-slate-800 dark:text-slate-200 text-sm transition-all text-right shadow-sm"
             />
           </div>
         </div>
@@ -134,12 +134,12 @@ export const Menu: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-white border border-slate-100 rounded-[32px] shadow-sm max-w-xl mx-auto mt-10 p-8 flex flex-col items-center">
-            <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-3xl mb-4">
+          <div className="text-center py-20 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] shadow-sm max-w-xl mx-auto mt-10 p-8 flex flex-col items-center">
+            <div className="w-16 h-16 bg-slate-50 dark:bg-slate-950 rounded-2xl flex items-center justify-center text-3xl mb-4">
               🔍
             </div>
-            <h3 className="text-lg font-bold text-slate-700 mb-1">عذراً، لم نجد نتائج تطابق بحثك</h3>
-            <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
+            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-1">عذراً، لم نجد نتائج تطابق بحثك</h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 max-w-xs leading-relaxed">
               تأكد من كتابة اسم المشروب بشكل صحيح أو اختر تصنيفاً آخر لتصفح مشروبات بديلة.
             </p>
           </div>
@@ -157,15 +157,15 @@ export const Menu: React.FC = () => {
         {selectedProduct && (
           <div className="grid grid-cols-1 gap-6">
             {/* Short product banner */}
-            <div className="flex items-center gap-4 bg-slate-50 border border-slate-100 p-4 rounded-2xl text-right">
+            <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 p-4 rounded-2xl text-right">
               <img
                 src={selectedProduct.image}
                 alt={selectedProduct.name}
                 className="w-16 h-16 rounded-xl object-cover"
               />
               <div>
-                <h4 className="font-bold text-slate-800">{selectedProduct.name}</h4>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-1 leading-relaxed">
+                <h4 className="font-bold text-slate-800 dark:text-slate-100">{selectedProduct.name}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1 leading-relaxed">
                   {selectedProduct.description}
                 </p>
               </div>

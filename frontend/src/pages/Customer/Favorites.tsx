@@ -34,7 +34,7 @@ export const Favorites: React.FC = () => {
   }
 
   return (
-    <div className="py-10 bg-slate-50/50 flex-grow text-right">
+    <div className="py-10 bg-slate-50/50 dark:bg-slate-950 flex-grow text-right transition-colors duration-300">
       <Helmet>
         <title>مشروبات مشبرة | المشروبات المفضلة</title>
         <meta name="description" content="راجع قائمة مشروباتك وعصائرك المفضلة التي قمت بحفظها للطلب السريع." />
@@ -43,7 +43,7 @@ export const Favorites: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title */}
-        <h1 className="text-2xl md:text-3xl font-black text-slate-800 mb-10 flex items-center gap-3">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-slate-100 mb-10 flex items-center gap-3">
           <Heart className="w-8 h-8 text-rose-500 fill-rose-500" />
           <span>المشروبات المفضلة</span>
         </h1>
@@ -55,12 +55,12 @@ export const Favorites: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-white border border-slate-100 rounded-[32px] shadow-sm max-w-xl mx-auto p-8 flex flex-col items-center">
-            <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-3xl mb-4 text-rose-500">
+          <div className="text-center py-20 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[32px] shadow-sm max-w-xl mx-auto p-8 flex flex-col items-center">
+            <div className="w-16 h-16 bg-rose-50 dark:bg-rose-950/20 rounded-2xl flex items-center justify-center text-3xl mb-4 text-rose-500">
               💖
             </div>
-            <h3 className="text-lg font-bold text-slate-700 mb-1">قائمة المفضلة فارغة</h3>
-            <p className="text-xs text-slate-400 max-w-xs leading-relaxed mb-6">
+            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-1">قائمة المفضلة فارغة</h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 max-w-xs leading-relaxed mb-6">
               لم تقم بإضافة أي مشروبات إلى قائمتك المفضلة بعد. تصفح المنيو واضغط على أيقونة القلب لحفظ المشروب هنا.
             </p>
             <Link to="/menu" className="px-5 py-2.5 bg-brand-orange-500 hover:bg-brand-orange-600 text-white font-bold rounded-xl shadow-sm text-sm transition-all">
